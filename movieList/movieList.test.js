@@ -1,4 +1,5 @@
 const {Builder, Capabilities, By} = require('selenium-webdriver')
+const {addMovies, markAsWatched, deleteMovies} = require('./functions.js')
 
 require('chromedriver')
 
@@ -7,38 +8,64 @@ const driver = new Builder().withCapabilities(Capabilities.chrome()).build()
 beforeAll(async () => {
     await driver.get('http://localhost:5500/automation/movieList/index.html')
 })
-
-test('Add 5 movies, mark them as watched, then delete them all hahaha', async () => {
-    let movies = ['Everything is illuminated', 'Bad Boys II', 'Easy A', 'Tenet', 'Mean Girls']
-    
-    let movieInput = await driver.findElement(By.xpath('/html/body/main/section/form/input'))
-    
-    let button = await driver.findElement(By.xpath('/html/body/main/section/form/button'))
-
-    for(let i = 0; i<movies.length;i++){
-        await movieInput.sendKeys(movies[i])
-        await button.click()
-        await driver.sleep(200)
-    }
-    
-    for(let j=1;j<movies.length+1;j++){
-        let movieToClick = await driver.findElement(By.xpath(`/html/body/main/ul/li[${j}]/span`))
-        await movieToClick.click()
-        await driver.sleep(500)
-    }
-    
-    for(let k=0; k<movies.length;k++){
-        let movieToDelete = await driver.findElement(By.xpath(`/html/body/main/ul/li[1]/button`))
-        
-        await movieToDelete.click()
-        await driver.sleep(500)
-    }
+afterAll(async () => {
+    await driver.quit()
 })
-// 3 INDIVIDUAL FUNCTIONS FOR ADDING, MARKING AS WATCHED, AND DELETING. I MASHED ALL OF THEM TOGETHER IN A SINGLE TEST ABOVE
 
-// afterAll(async () => {
-//     await driver.quit()
+describe('Add 5 movies, mark them as watched, then delete them all hahaha', () => {
+
+    test('Add movies', async () => {
+
+        await addMovies(driver)
+        await driver.sleep(2000)
+
+    })
+    test('Mark movies as watched', async () => {
+
+        await markAsWatched(driver)
+        await driver.sleep(2000)
+       
+    })
+    test('Delete all the movies', async () => {
+
+        await deleteMovies(driver)
+        await driver.sleep(2000)
+    })
+})
+
+
+// test('Add 5 movies, mark them as watched, then delete them all hahaha', async () => {
+//     // let movies = ['Everything is illuminated', 'Bad Boys II', 'Easy A', 'Tenet', 'Mean Girls']
+    
+    
+//     addMovies()
+//     markAsWatched()
+//     deleteMovies()
+    
+    //FOR LOOPS TO ADD, MARK AS WATCHED, AND DELETE
+    // let movieInput = await driver.findElement(By.xpath('/html/body/main/section/form/input'))
+    // let button = await driver.findElement(By.xpath('/html/body/main/section/form/button'))
+
+    // for(let i = 0; i<movies.length;i++){
+    //     await movieInput.sendKeys(movies[i])
+    //     await button.click()
+    //     await driver.sleep(200)
+    // }
+    
+    // for(let j=1;j<movies.length+1;j++){
+    //     let movieToClick = await driver.findElement(By.xpath(`/html/body/main/ul/li[${j}]/span`))
+    //     await movieToClick.click()
+    //     await driver.sleep(500)
+    // }
+    
+    // for(let k=0; k<movies.length;k++){
+    //     let movieToDelete = await driver.findElement(By.xpath(`/html/body/main/ul/li[1]/button`))
+        
+    //     await movieToDelete.click()
+    //     await driver.sleep(500)
+    // }
 // })
+// 3 INDIVIDUAL FUNCTIONS FOR ADDING, MARKING AS WATCHED, AND DELETING. I MASHED ALL OF THEM TOGETHER IN A SINGLE TEST ABOVE
 
 // test('Add a movie', async () => {
 //     let movieInput = await driver.findElement(By.xpath('/html/body/main/section/form/input'))
